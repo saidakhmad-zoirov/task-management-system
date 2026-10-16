@@ -1,0 +1,274 @@
+@import "tailwindcss";
+
+/* ---------- Ranglar: bitta qorong'i palitra (mavzu almashmaydi — ranglar aralashib ketmaydi) ----------
+   accent  — zumrad-yashil: asosiy tugmalar, "bajarildi", eng muhim raqamlar
+   violet  — "jarayonda", ikkinchi darajali urg'u
+   coral   — muddati o'tgan / yuqori muhimlik (semantik ogohlantirish) */
+:root {
+  --bg: #09090d;
+  --bg-2: #0c0c12;
+  --panel: #13131a;
+  --panel-2: #191921;
+  --line: #1e1e28;
+  --line-strong: #2c2c38;
+  --ink: #f5f5f7;
+  --muted: #a7a7b3;
+  --faint: #8c8c99;
+  --accent: #2fd39a;
+  --on-accent: #04241a;
+  --violet: #9d90ff;
+  --coral: #ff6b5b;
+  --glow: rgba(47, 211, 154, 0.22);
+  --glow-violet: rgba(157, 144, 255, 0.18);
+  --shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.85);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-2: var(--bg-2);
+  --color-panel: var(--panel);
+  --color-panel-2: var(--panel-2);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+  --color-violet: var(--violet);
+  --color-coral: var(--coral);
+
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --shadow-soft: var(--shadow);
+}
+
+/* Sahifa asosi QATLAMSIZ: tashqi reset (masalan "body { background:#fff; color:#000 }")
+   har qanday @layer ichidagi qoidadan kuchli bo'ladi, shuning uchun bu yerda yozilgan. */
+html {
+  background: var(--bg);
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer base {
+  h1,
+  h2,
+  h3 {
+    @apply font-display;
+    font-weight: 500;
+    letter-spacing: -0.012em;
+    word-spacing: 0.04em; /* harflar bir-biriga yopishmasin */
+    text-wrap: balance;
+  }
+  ::selection {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+  input,
+  textarea,
+  select,
+  button {
+    font: inherit;
+  }
+}
+
+@layer components {
+  .panel {
+    @apply rounded-3xl border border-line bg-panel;
+  }
+  .label {
+    @apply font-mono text-[11px] uppercase tracking-[0.18em] text-faint;
+  }
+  .field {
+    @apply w-full rounded-2xl border border-line-strong bg-panel-2 px-4 py-3 text-ink placeholder:text-faint transition;
+  }
+  .field:focus {
+    @apply border-violet outline-none;
+    box-shadow: 0 0 0 4px var(--glow-violet);
+  }
+  .field[aria-invalid="true"] {
+    @apply border-coral;
+  }
+  select.field {
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+    background-position:
+      calc(100% - 20px) 50%,
+      calc(100% - 15px) 50%;
+    background-size: 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 2.5rem;
+  }
+  .chip {
+    @apply inline-flex items-center gap-2 rounded-full border border-line-strong px-4 py-2 text-sm text-muted transition hover:border-faint hover:text-ink;
+  }
+  .chip[aria-pressed="true"] {
+    @apply border-transparent bg-ink text-bg;
+  }
+}
+
+@utility glow-accent {
+  box-shadow:
+    0 0 0 1px var(--glow),
+    0 14px 50px -10px var(--glow);
+}
+
+/* ---------- Jonli harflar ---------- */
+
+/* Sarlavha harflari birma-bir ko'tariladi */
+.split-char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.6em) rotate(4deg);
+  animation: char-rise 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  animation-delay: calc(var(--i) * 28ms + var(--d, 0ms));
+}
+@keyframes char-rise {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* So'z almashinuvi: harflar 3D aylanib chiqadi */
+.flip-char {
+  display: inline-block;
+  transform-origin: 50% 70%;
+  animation: char-flip 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(var(--i) * 45ms);
+}
+@keyframes char-flip {
+  from {
+    opacity: 0;
+    transform: perspective(400px) rotateX(-90deg) translateY(0.2em);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+/* Tugma matni hover'da yuqoriga "aylanadi" */
+.roll {
+  display: inline-grid;
+  overflow: hidden;
+  line-height: 1.25;
+}
+.roll > span {
+  grid-area: 1 / 1;
+  transition: transform 0.45s cubic-bezier(0.7, 0, 0.2, 1);
+}
+.roll > span:last-child {
+  transform: translateY(110%);
+}
+.group:hover .roll > span:first-child,
+.roll-host:hover .roll > span:first-child {
+  transform: translateY(-110%);
+}
+.group:hover .roll > span:last-child,
+.roll-host:hover .roll > span:last-child {
+  transform: none;
+}
+
+/* Ro'yxat elementlari birin-ketin ko'tariladi (ko'rinish holatida qoladi — kutib turmaydi) */
+.rise {
+  animation: rise 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 55ms);
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+
+.page-in {
+  animation: rise 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.shimmer {
+  background: linear-gradient(100deg, var(--panel-2) 30%, var(--line-strong) 50%, var(--panel-2) 70%);
+  background-size: 300% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+
+/* "Bajarildi" bosilganda accent halqa tarqaladi */
+.pop-ring {
+  position: relative;
+}
+.pop-ring::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 999px;
+  border: 2px solid var(--accent);
+  animation: pop 0.6s ease-out forwards;
+  pointer-events: none;
+}
+@keyframes pop {
+  from {
+    opacity: 1;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.8);
+  }
+}
+
+.live-dot {
+  animation: pulse-dot 1.8s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.toast-in {
+  animation: rise 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .split-char,
+  .flip-char {
+    opacity: 1;
+    transform: none;
+  }
+}

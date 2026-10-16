@@ -1,0 +1,24 @@
+# maxfiy
+.env
+.env.*
+!.env.example
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+*.sqlite3
+*.db
+
+# node
+node_modules/
+frontend/dist/
+*.log
+
+# ide / os
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
